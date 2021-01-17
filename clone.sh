@@ -18,18 +18,27 @@ fi
 return
 }
 checking
-usr(){
-g=$(curl -s https://api.github.com/users/$w/repos | grep -Po '(?<="clone_url":)[^,]*' |  
+user(){
+local g down
+g=$(curl -s https://api.github.com/users/$w/repos)
+ba=$(echo $g | grep -Po '(?<="clone_url":)[^,]*' |  
 gawk '{print $1}' | tr -d '""' | 
 gawk -F //git. '{ print $2 }' | 
-cut -d "." -f2 | gawk -F / '{ print $3 }' | grep -n "")
-printf "$g \n"
+cut -d "." -f2 | gawk -F / '{ print $3 }'|sort -u)
+for arrItem in "${ba[@]}"
+do
+  select nu in $arrItem
+do
+        echo "$nu"
+        break
+   done
+done
 }
 main () {
-oa="curl -s https://api.github.com/users/`cat user`/repos" 
-js=$($oa | grep -Po '(?<="clone_url":)[^,]*' | grep -n "" | grep -o "$pilih:.*" | head -1 | gawk '{ print $2 }' | tr -d '"' | gawk '{ print $1 }')
-#gawk -F $pilih: '{ print $2 }' | sed -e 's/"//g' -e 's/,//g' | gawk '{ print $1 }')
-echo "$js" >> down
+        local oa js
+        oa="curl -s https://api.github.com/users/${w}/repos"
+        js=$($oa | grep -Po '(?<="clone_url":)[^,]*' | grep -n "" | grep -o "$pilih:.*" | head -1 | gawk '{ print $2 }' | tr -d '"' | gawk '{ print $1 }')
+        echo "$js" >> down
 }
 shuf -e "
 ${CYAN}
@@ -43,9 +52,8 @@ ${CYAN}
 Powered by zsecc0de-crew.id
 "
 echo -en "${RED}[?] ${NORMAL}name > "; read w
-usr $w
-echo "$w" >> user
-echo -en "${GREEN}[*] ${NORMAL}pilih > "; read pilih
+user $w
+# echo -en "${GREEN}[*] ${NORMAL}pilih > "; read pilih
 main $j;
 git clone `cat down`
 rm -rf user
