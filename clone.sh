@@ -19,7 +19,7 @@ return
 }
 checking
 user(){
-local g down
+local g ba
 g=$(curl -s https://api.github.com/users/$w/repos)
 ba=$(echo $g | grep -Po '(?<="clone_url":)[^,]*' |  
 gawk '{print $1}' | tr -d '""' | 
