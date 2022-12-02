@@ -1,5 +1,5 @@
 # clonehub
-auto downloader file github from username 
+auto downloader folder github from username 
 ```
 git clone https://github.com/widhisec/clonehub && cd clonehub && bash clone.sh
 ```
